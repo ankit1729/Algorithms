@@ -1,0 +1,24 @@
+# Ignore .metadata directory and all files under the directory
+.metadata/
+
+# Ignore .recommenders directory and all files under the directory
+.recommenders/
+
+# Ignore .settings directory
+.settings/
+
+# Ignore .classpath directory
+.classpath
+# ignore .project file
+.project
+
+# Ignore bin directory
+bin/
+
+#Ignore below Projects for time being
+/BST/
+/LinkedList/
+/Graphs
+/Heaps/
+/PeakFinding/
+/Recursion/
