@@ -10,7 +10,7 @@ import com.Queue.Queue;
 import com.linkedList.LinkedList;
 import com.model.Student;
 
-public class GraphAdjList<E> extends Object{
+public class GraphAdjList<E>{
 	
 	private List<Vertex<E>> vertexList;
 	private LinkedList<Vertex<E>> adj [];

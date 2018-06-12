@@ -15,6 +15,9 @@
 # Ignore bin directory
 bin/
 
+# Ignore Target directory produced by Maven
+target/
+
 #Ignore below Projects for time being
 /BST/
 /LinkedList/

@@ -42,17 +42,16 @@ public class Student implements Comparable<Student>{
 		Student student = null;
 		if(obj instanceof Student)
 			student = (Student)obj;
-		else
-			return false;
+		else{
+			throw new IllegalArgumentException("Type Student cannot be comapred with any other type");
+		}
 		
-		
-		return (student.name.equals(this.name)) ? true : false;
+		return this.rollNumber == student.rollNumber ? true : false;
 	}
 	
 	@Override
 	public int hashCode() {
-
-		return this.rollNumber;
+		return this.name.hashCode();
 	}
 
 	@Override
