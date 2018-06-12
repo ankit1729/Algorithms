@@ -1,10 +1,11 @@
 package com.heaps;
 
-import com.model.Student;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Heap <E extends Comparable<E>>{
 	
-	 Object[] elements;
+	Object[] elements;
 	private int heapSize;
 	// 1 For MaxHeap and 2 for MinHeap
 	private int heapType;
@@ -102,7 +103,24 @@ public class Heap <E extends Comparable<E>>{
 		}
 		
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public List<E> buildHeap(){
+		List<E> elements = new ArrayList<>();
+		for(int i = (heapSize/2) -1; i >= 0; i--){
+			if(heapType == 1){
+				maxHeapify(i);
+			}
+			else{
+				minHeapify(i);
+			}
+		}
+		
+		for(int i = 0; i < heapSize; i++){
+			elements.add((E)this.elements[i]);
+		}
+		return elements;
+	}
 	
 	private void swap(int index, int swapElemInd) {
 		Object temp = elements[index];
@@ -129,15 +147,5 @@ public class Heap <E extends Comparable<E>>{
 		}
 	}
 	
-
-	public static void main(String[] args) {
-		Student [] students = new Student[10];
-		for(int i = 0; i < students.length; i++){
-			students[i] = new Student(i+1, 90+i, "ABC"+i);
-		}
-		
-		Heap<Student> maxHeap = new Heap<>(1, students);
-		
-	}
 
 }

@@ -1,5 +1,7 @@
 package com.heaps;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -57,7 +59,45 @@ public class HeapTest {
         }
     }
     
-    private Student[] maxHeapifyTestData(){
+    @Test
+    public void buildHeapTest(){
+    	System.out.println("@Test - BuildHeap");
+    	Student [] students = buildHeapTestData();
+    
+    	Heap<Student> maxHeap = new Heap<>(1,students);
+    	List<Student> result =  maxHeap.buildHeap();
+    	System.out.println("Max heap formed is : ");
+    	for(Student student : result){
+    		System.out.println(student);
+    	}
+    	
+    	Heap<Student> minHeap = new Heap<>(2, students);
+    	List<Student> result1 =  minHeap.buildHeap();
+    	System.out.println("Min heap formed is : ");
+    	for(Student student : result1){
+    		System.out.println(student);
+    	}
+    }
+    
+    private Student[] buildHeapTestData() {
+    	
+    	Student [] students = new Student[11];
+    	students[0] = new Student(11,90,"ABC");
+    	students[1] = new Student(4,91,"ABC1");
+    	students[2] = new Student(9,92,"ABC2");
+    	students[3] = new Student(6,93,"ABC3");
+    	students[4] = new Student(10,94,"ABC4");
+    	students[5] = new Student(5,95,"ABC5");
+    	students[6] = new Student(3,96,"ABC6");
+    	students[7] = new Student(2,97,"ABC7");
+    	students[8] = new Student(1,98,"ABC8");
+    	students[9] = new Student(8,99,"ABC9");
+    	students[10] = new Student(7,100,"ABC10");
+    
+    	return students;
+	}
+
+	private Student[] maxHeapifyTestData(){
     
     	Student [] students = new Student[11];
     	students[0] = new Student(11,90,"ABC");
