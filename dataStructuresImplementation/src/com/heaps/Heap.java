@@ -291,6 +291,9 @@ public class Heap <E extends Comparable<E>>{
 		if(elemIndex == -1){
 			return false;
 		}
+		else if(elemIndex == -2){
+			throw new IllegalArgumentException("Element to be deleted can not be null");
+		}
 		else{
 			return delete(elemIndex);
 		}
@@ -333,12 +336,21 @@ public class Heap <E extends Comparable<E>>{
 	}
 	
 	private int findElement(E elem){
+		if(elem == null){
+			return -2;
+		}
 		for(int i = 0; i <= heapSize -1; i++){
 			if(elem.equals(this.elements[i]) && elem.compareTo((E)this.elements[i]) == 0){
 				return i;
 			}
 		}
 		return -1;
+	}
+	
+	public int getIndex(E elem){
+		if (elem == null)
+			throw new IllegalArgumentException("element passed can not be null");
+		return findElement(elem);
 	}
 	
 	private void swap(int index, int swapElemInd) {
