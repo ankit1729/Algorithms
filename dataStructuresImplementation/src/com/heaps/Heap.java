@@ -12,7 +12,7 @@ public class Heap <E extends Comparable<E>>{
 	
 	public Heap(int heapType){
 		checkHeapTypeArgument(heapType);
-		elements = new Object[20];
+		elements = new Object[100000];
 		//this.heapSize = elements.length;
 		this.heapType = heapType;
 	}
@@ -120,6 +120,225 @@ public class Heap <E extends Comparable<E>>{
 			elements.add((E)this.elements[i]);
 		}
 		return elements;
+	}
+	
+	
+	// Assumes Heap is a Max-Heap and sorts the elements in non decreasing order
+	@SuppressWarnings("unchecked")
+	public List<E> heapSort(){
+		this.heapType = 1;
+		buildHeap();
+		List<E> elements = new ArrayList<>();
+		int origHeapSize = this.heapSize;
+		for(int i = heapSize -1; i > 0; i--){
+			swap(0,heapSize -1);
+			heapSize --;
+			maxHeapify(0);
+		}
+		
+		for(int i = 0; i < origHeapSize; i++){
+			elements.add((E)this.elements[i]);
+		}
+		return elements;
+	}
+	
+	public boolean insert(E elem){
+		heapSize ++;
+		if(this.heapType == 1){
+			this.elements[heapSize -1] = Integer.MIN_VALUE;
+			return increaseKey(heapSize -1, elem);
+		}
+		else {
+			this.elements[heapSize -1] = Integer.MAX_VALUE;
+			return decreaseKey(heapSize -1, elem);
+		}
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean decreaseKey(int i, E newElem){
+		if(newElem.compareTo((E)this.elements[i]) >= 0){
+			throw new IllegalArgumentException("New Key is greater than or equal to already Present key");
+		}
+		
+		this.elements[i] = newElem;
+		
+		// If Heap is Min-Heap we compare with the parent elements and go up
+		if(this.heapType == 2){
+			int parentInd = getParentIndex(i);
+			while(i > 0 && ((E)elements[i]).compareTo((E)this.elements[parentInd]) < 0){
+				swap(i, parentInd);
+				i = parentInd;
+				parentInd = getParentIndex(i);
+			}
+		}
+		
+		// If heap is a Max-Heap, we just maxHeapify
+		else if(this.heapType == 1){
+			maxHeapify(i);
+		}
+		return true;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean increaseKey(int i, E newElem){
+		if(newElem.compareTo((E)this.elements[i]) <= 0){
+			throw new IllegalArgumentException("New Key is greater than or equal to already Present key");
+		}
+		
+		this.elements[i] = newElem;
+		
+		// If Heap is Max-Heap we compare with the parent elements and go up
+		if(this.heapType == 1){
+			int parentInd = getParentIndex(i);
+			while(i > 0 && ((E)elements[i]).compareTo((E)this.elements[parentInd]) > 0){
+				swap(i, parentInd);
+				i = parentInd;
+				parentInd = getParentIndex(i);
+			}
+		}
+		
+		// If heap is a Min-Heap, we just maxHeapify
+		else if(this.heapType == 2){
+			minHeapify(i);
+		}
+		return true;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public E extractMax(){
+		E maxElem = null;
+		if(this.heapType == 1){
+			maxElem = (E)this.elements[0];
+			this.elements[0] = this.elements[heapSize -1];
+			heapSize --;
+			maxHeapify(0);
+		}
+		// If heap type is Min-Heap, then max element will be in one of the leaves
+		else if(this.heapType == 2){
+			maxElem = (E)this.elements[heapSize -1];
+			int maxElemInd = heapSize -1;
+			for(int i = heapSize -1; i >= heapSize/2; i--){
+				if(maxElem.compareTo((E)this.elements[i]) < 0){
+					maxElem = (E)this.elements[i];
+					maxElemInd = i;
+				}
+			}
+			
+			// Below code is to replace maxElem found with last element in heap
+			// decrease the heapSize and minHeapify and re arrange the heap
+			// by checking with parent nodes.
+			this.elements[maxElemInd] = this.elements[heapSize -1];
+			heapSize --;
+			if(maxElemInd != heapSize -1){
+				int index = maxElemInd;
+				int parentIndex = getParentIndex(maxElemInd);
+				while(index > 0 && 
+						((E)this.elements[index]).compareTo((E)this.elements[parentIndex]) < 0){
+					swap(index,parentIndex);
+					index = parentIndex;
+					parentIndex = index;
+				}
+			}
+		}
+		
+		return maxElem;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public E extractMin(){
+		E minElem = null;
+		if(this.heapType == 2){
+			minElem = (E)this.elements[0];
+			this.elements[0] = this.elements[heapSize -1];
+			heapSize --;
+			maxHeapify(0);
+		}
+		// If heap type is Max-Heap, then min element will be in one of the leaves
+		else if(this.heapType == 1){
+			minElem = (E)this.elements[heapSize -1];
+			int minElemInd = heapSize -1;
+			for(int i = heapSize -1; i >= heapSize/2; i--){
+				if(minElem.compareTo((E)this.elements[i]) < 0){
+					minElem = (E)this.elements[i];
+					minElemInd = i;
+				}
+			}
+			
+			// Below code is to replace minElem found with last element in heap
+			// decrease the heapSize and maxHeapify
+			this.elements[minElemInd] = this.elements[heapSize -1];
+			heapSize --;
+			if(minElemInd != heapSize -1){
+				int index = minElemInd;
+				int parentIndex = getParentIndex(minElemInd);
+				while(index > 0 && 
+						((E)this.elements[index]).compareTo((E)this.elements[parentIndex]) > 0){
+					swap(index,parentIndex);
+					index = parentIndex;
+					parentIndex = index;
+				}
+			}
+		}
+		
+		return minElem;
+	}
+	
+	public boolean delete(E elem){
+		int elemIndex = findElement(elem);
+		if(elemIndex == -1){
+			return false;
+		}
+		else{
+			return delete(elemIndex);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean delete(int elemIndex){
+		if(elemIndex > heapSize -1)
+			throw new IllegalArgumentException("Index to be deleted is greater than Heap Size");
+		
+		this.elements[elemIndex] = this.elements[this.heapSize -1];
+		heapSize--;
+		int parentIndex = getParentIndex(elemIndex);
+		if(heapType == 1){
+			if(((E)this.elements[elemIndex]).compareTo((E)this.elements[parentIndex]) > 0){
+				while(elemIndex > 0 &&((E)this.elements[elemIndex]).compareTo((E)this.elements[parentIndex]) > 0){
+					swap(elemIndex,parentIndex);
+					elemIndex = parentIndex;
+					parentIndex = getParentIndex(elemIndex);
+				}
+			}
+			else{
+				maxHeapify(elemIndex);
+			}
+		}
+		else if(heapType == 2){
+			if(((E)this.elements[elemIndex]).compareTo((E)this.elements[parentIndex]) < 0){
+				while(elemIndex > 0 && ((E)this.elements[elemIndex]).compareTo((E)this.elements[parentIndex]) < 0){
+					swap(elemIndex,parentIndex);
+					elemIndex = parentIndex;
+					parentIndex = getParentIndex(elemIndex);
+				}
+			}
+			else{
+				minHeapify(elemIndex);
+			}
+		}
+		
+		return true;
+	}
+	
+	private int findElement(E elem){
+		for(int i = 0; i <= heapSize -1; i++){
+			if(elem.equals(this.elements[i]) && elem.compareTo((E)this.elements[i]) == 0){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	private void swap(int index, int swapElemInd) {
