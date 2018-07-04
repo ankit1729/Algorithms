@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.HashMap;
+import java.util.Map;
 
 public class Student implements Comparable<Student>{
 	
@@ -58,5 +60,22 @@ public class Student implements Comparable<Student>{
 	public int compareTo(Student o) {
 		return this.rollNumber.compareTo(o.rollNumber);
 	}
+	
+	/*public static void main(String[] args) {
+		Student student1 = new Student(100, 90, "ABC");
+		Student student2 = new Student(2, 100, "XYZ");
+		Student student3 = new Student(34, 95, "PQR");
+		Student student4 = new Student(8, 97, "MNO");
+		Student student5 = new Student(5, 99, "ZXC");
+		
+		Map<Integer, Student> studentVertexMap = new HashMap<>();
+		studentVertexMap.put(student2.getRollNumber(), student2);
+		studentVertexMap.put(student1.getRollNumber(), student1);
+		
+		studentVertexMap.put(student3.getRollNumber(), student3);
+		studentVertexMap.put(student4.getRollNumber(), student4);
+		studentVertexMap.put(student5.getRollNumber(), student5);
+		System.out.println(studentVertexMap);
+	}*/
 		
 }

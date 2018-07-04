@@ -6,7 +6,7 @@ import java.util.List;
 public class Heap <E extends Comparable<E>>{
 	
 	Object[] elements;
-	private int heapSize;
+    int heapSize;
 	// 1 For MaxHeap and 2 for MinHeap
 	private int heapType;
 	
@@ -122,6 +122,15 @@ public class Heap <E extends Comparable<E>>{
 		return elements;
 	}
 	
+	 List<E> getHeap(){
+		 List<E> heapAsList = new ArrayList<>();
+		 for(int i = 0; i <= heapSize -1; i++){
+			heapAsList.add((E) this.elements[i]);
+		 }
+		 return heapAsList;
+	 }
+	
+	
 	
 	// Assumes Heap is a Max-Heap and sorts the elements in non decreasing order
 	@SuppressWarnings("unchecked")
@@ -157,7 +166,11 @@ public class Heap <E extends Comparable<E>>{
 	
 	@SuppressWarnings("unchecked")
 	public boolean decreaseKey(int i, E newElem){
-		if(newElem.compareTo((E)this.elements[i]) >= 0){
+		
+		if(i >= this.heapSize){
+			throw new IllegalArgumentException("Index passed is out of range of current HeapSize");
+		}
+		else if(newElem.compareTo((E)this.elements[i]) >= 0){
 			throw new IllegalArgumentException("New Key is greater than or equal to already Present key");
 		}
 		
@@ -183,7 +196,11 @@ public class Heap <E extends Comparable<E>>{
 	
 	@SuppressWarnings("unchecked")
 	public boolean increaseKey(int i, E newElem){
-		if(newElem.compareTo((E)this.elements[i]) <= 0){
+		
+		if(i >= this.heapSize){
+			throw new IllegalArgumentException("Index passed is out of range of current HeapSize");
+		}
+		else if(newElem.compareTo((E)this.elements[i]) <= 0){
 			throw new IllegalArgumentException("New Key is greater than or equal to already Present key");
 		}
 		
@@ -210,79 +227,81 @@ public class Heap <E extends Comparable<E>>{
 	@SuppressWarnings("unchecked")
 	public E extractMax(){
 		E maxElem = null;
-		if(this.heapType == 1){
-			maxElem = (E)this.elements[0];
-			this.elements[0] = this.elements[heapSize -1];
-			heapSize --;
-			maxHeapify(0);
-		}
-		// If heap type is Min-Heap, then max element will be in one of the leaves
-		else if(this.heapType == 2){
-			maxElem = (E)this.elements[heapSize -1];
-			int maxElemInd = heapSize -1;
-			for(int i = heapSize -1; i >= heapSize/2; i--){
-				if(maxElem.compareTo((E)this.elements[i]) < 0){
-					maxElem = (E)this.elements[i];
-					maxElemInd = i;
+		if(this.heapSize > 0){
+			if(this.heapType == 1){
+				maxElem = (E)this.elements[0];
+				this.elements[0] = this.elements[heapSize -1];
+				heapSize --;
+				maxHeapify(0);
+			}
+			// If heap type is Min-Heap, then max element will be in one of the leaves
+			else if(this.heapType == 2){
+				maxElem = (E)this.elements[heapSize -1];
+				int maxElemInd = heapSize -1;
+				for(int i = heapSize -1; i >= heapSize/2; i--){
+					if(maxElem.compareTo((E)this.elements[i]) < 0){
+						maxElem = (E)this.elements[i];
+						maxElemInd = i;
+					}
+				}
+				
+				// Below code is to replace maxElem found with last element in heap
+				// decrease the heapSize and minHeapify and re arrange the heap
+				// by checking with parent nodes.
+				this.elements[maxElemInd] = this.elements[heapSize -1];
+				heapSize --;
+				if(maxElemInd != heapSize -1){
+					int index = maxElemInd;
+					int parentIndex = getParentIndex(maxElemInd);
+					while(index > 0 && 
+							((E)this.elements[index]).compareTo((E)this.elements[parentIndex]) < 0){
+						swap(index,parentIndex);
+						index = parentIndex;
+						parentIndex = index;
+					}
 				}
 			}
-			
-			// Below code is to replace maxElem found with last element in heap
-			// decrease the heapSize and minHeapify and re arrange the heap
-			// by checking with parent nodes.
-			this.elements[maxElemInd] = this.elements[heapSize -1];
-			heapSize --;
-			if(maxElemInd != heapSize -1){
-				int index = maxElemInd;
-				int parentIndex = getParentIndex(maxElemInd);
-				while(index > 0 && 
-						((E)this.elements[index]).compareTo((E)this.elements[parentIndex]) < 0){
-					swap(index,parentIndex);
-					index = parentIndex;
-					parentIndex = index;
-				}
-			}
 		}
-		
 		return maxElem;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public E extractMin(){
 		E minElem = null;
-		if(this.heapType == 2){
-			minElem = (E)this.elements[0];
-			this.elements[0] = this.elements[heapSize -1];
-			heapSize --;
-			maxHeapify(0);
-		}
-		// If heap type is Max-Heap, then min element will be in one of the leaves
-		else if(this.heapType == 1){
-			minElem = (E)this.elements[heapSize -1];
-			int minElemInd = heapSize -1;
-			for(int i = heapSize -1; i >= heapSize/2; i--){
-				if(minElem.compareTo((E)this.elements[i]) < 0){
-					minElem = (E)this.elements[i];
-					minElemInd = i;
+		if(this.heapSize > 0){
+			if(this.heapType == 2){
+				minElem = (E)this.elements[0];
+				this.elements[0] = this.elements[heapSize -1];
+				heapSize --;
+				minHeapify(0);
+			}
+			// If heap type is Max-Heap, then min element will be in one of the leaves
+			else if(this.heapType == 1){
+				minElem = (E)this.elements[heapSize -1];
+				int minElemInd = heapSize -1;
+				for(int i = heapSize -1; i >= heapSize/2; i--){
+					if(minElem.compareTo((E)this.elements[i]) < 0){
+						minElem = (E)this.elements[i];
+						minElemInd = i;
+					}
+				}
+				
+				// Below code is to replace minElem found with last element in heap
+				// decrease the heapSize and maxHeapify
+				this.elements[minElemInd] = this.elements[heapSize -1];
+				heapSize --;
+				if(minElemInd != heapSize -1){
+					int index = minElemInd;
+					int parentIndex = getParentIndex(minElemInd);
+					while(index > 0 && 
+							((E)this.elements[index]).compareTo((E)this.elements[parentIndex]) > 0){
+						swap(index,parentIndex);
+						index = parentIndex;
+						parentIndex = index;
+					}
 				}
 			}
-			
-			// Below code is to replace minElem found with last element in heap
-			// decrease the heapSize and maxHeapify
-			this.elements[minElemInd] = this.elements[heapSize -1];
-			heapSize --;
-			if(minElemInd != heapSize -1){
-				int index = minElemInd;
-				int parentIndex = getParentIndex(minElemInd);
-				while(index > 0 && 
-						((E)this.elements[index]).compareTo((E)this.elements[parentIndex]) > 0){
-					swap(index,parentIndex);
-					index = parentIndex;
-					parentIndex = index;
-				}
-			}
 		}
-		
 		return minElem;
 	}
 	
@@ -335,6 +354,7 @@ public class Heap <E extends Comparable<E>>{
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private int findElement(E elem){
 		if(elem == null){
 			return -2;
@@ -378,5 +398,14 @@ public class Heap <E extends Comparable<E>>{
 		}
 	}
 	
-
+	@SuppressWarnings("unchecked")
+	public E getTop(){
+		if(this.heapSize > 0){
+			return (E)this.elements[0];
+		}
+		else{
+			return null;
+		}
+	}
+	
 }
