@@ -87,7 +87,7 @@ public class GraphWeightedTest {
 		
 		
 		
-		weightedGraph = new GraphWeighted<>(studentVertexMap);
+		weightedGraph = new GraphWeighted<>(studentVertexMap,false);
 		//System.out.println(weightedGraph);
 		
 		
